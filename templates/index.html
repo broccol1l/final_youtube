@@ -1,14 +1,37 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Video List</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-{% for video in videos %}
-<img src="{{ video.video_content.url }}" alt="{{ video.video_title }}">
-<h2><a href="{% url 'video_detail' video.pk %}">{{ video.video_title }}</a></h2>
-<p>Uploaded by {{ video.user.username }} on {{ video.created_at }}</p>
-{% endfor %}
+<style>
+            h1 a {
+            color: white;
+            text-decoration: none;
+        }
+    body {
+    background-color: grey;
+    }
+    a {
+    text-decoration: none;
+    color: black;
+    }
+</style>
+    <header>
+        <h1><a href="{% url 'home' %}">YouTube</a></h1>
+    </header>
+    <div class="video-list">
+        {% for i in videos %}
+        <div class="video-item">
+            <img src="{{ i.preview.url }}" alt="">
+            <h2><a href="{% url 'video_detail' i.id %}">{{ i.video_title }}</a></h2>
+            <p>Uploaded by {{ i.user.username }} on {{ i.created_at }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script src="{% static 'script.js' %}"></script>
 </body>
 </html>

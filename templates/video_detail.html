@@ -1,10 +1,113 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ video.video_title }}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        body {
+            background-color: grey;
+            color: white;
+            font-family: Arial, sans-serif;
+
+        }
+        .video-detail {
+            margin-left: 5px;
+        }
+        h1 a {
+            color: white;
+            text-decoration: none;
+        }
+        h2 {
+            color: white;
+        }
+        video {
+            display: block;
+            margin: 20px 0;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comment-header {
+            display: flex;
+
+        }
+        .comment {
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
 </head>
 <body>
-asd
+    <header>
+        <h1><a href="{% url 'home' %}">YouTube</a></h1>
+    </header>
+    <div class="video-detail">
+        <video controls>
+            <source src="{{ video.video_content.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <h2>{{ video.video_title }}</h2>
+        <p>Uploaded by {{ video.user.username }} on {{ video.created_at }}</p>
+        <p>Likes: <span id="like-count">{{ video.like }}</span>
+            <button onclick="likeVideo({{ video.id }})">👍</button>
+            Dislikes: <span id="dislike-count">{{ video.dislike }}</span>
+            <button onclick="dislikeVideo({{ video.id }})">👎</button>
+        </p>
+        <h3>Comments</h3>
+      <div class="comments">
+            {% for comment in video.comments.all %}
+            <div class="comment">
+                <div class="comment-header">
+                    <p><strong>{{ comment.comment_user }}:</strong></p>
+                    <p><em>{{ comment.created_at }}</em></p>
+                </div>
+                <p>{{ comment.comment_text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <h3>Add a Comment</h3>
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="comment_text" rows="4" cols="50" required></textarea><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script src="{% static 'script.js' %}"></script>
+    <script>
+        function likeVideo(videoId) {
+            fetch(`/video/${videoId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('like-count').innerText = data.like;
+            });
+        }
+
+        function dislikeVideo(videoId) {
+            fetch(`/video/${videoId}/dislike/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('dislike-count').innerText = data.dislike;
+            });
+        }
+    </script>
 </body>
 </html>
+
+
