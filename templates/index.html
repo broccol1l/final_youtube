@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video List</title>
+</head>
+<body>
+{% for video in videos %}
+<img src="{{ video.video_content.url }}" alt="{{ video.video_title }}">
+<h2><a href="{% url 'video_detail' video.pk %}">{{ video.video_title }}</a></h2>
+<p>Uploaded by {{ video.user.username }} on {{ video.created_at }}</p>
+{% endfor %}
+</body>
+</html>
