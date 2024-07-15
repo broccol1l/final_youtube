@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'signup.css' %}">
+</head>
+<body>
+<form method="POST">
+    <h2>Signup</h2>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send!</button>
+    <p class="help-text">Your password must be at least 8 characters long, cannot be a commonly used password, and cannot be entirely numeric.</p>
+</form>
+</body>
+</html>

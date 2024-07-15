@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from . forms import UserRegistrationForm, UserLoginForm
+from .forms import UserRegistrationForm, UserLoginForm
 
 def register_view(request):
     if request.method == 'POST':
@@ -11,7 +11,6 @@ def register_view(request):
             form.save()
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
-            phone_number = form.cleaned_data.get('phone_number')
             user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('home')
@@ -29,7 +28,9 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
+            print(user)
             if user is not None:
+                print(user)
                 login(request, user)
                 return redirect('home')
         else:
